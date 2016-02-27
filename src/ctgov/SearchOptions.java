@@ -4,12 +4,15 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class SearchOptions{
 	private String requestURL = "https://clinicaltrials.gov/ct2/results?";
+	private String searchTerm = "";
 
 	private SearchOptions(SearchOptionsBuilder builder){
+		searchTerm = builder.searchTerm;
 		try {
 			String queryParams =
 					"term=" + URLEncoder.encode( builder.searchTerm, "UTF-8")+
@@ -30,6 +33,10 @@ public class SearchOptions{
 
 	public String getRequestURL(){
 		return this.requestURL;
+	}
+	
+	public String getTopic(){
+		return searchTerm;
 	}
 
 	public enum RecruitmentStatus{
@@ -87,7 +94,15 @@ public class SearchOptions{
 		private String lastUpdatedEnd = "";
 
 		public SearchOptionsBuilder(String term){
+			// Set search terms
 			this.searchTerm = term;
+			
+			// Set default range of dates
+			Calendar now = Calendar.getInstance(); // now
+			this.firstReceivedEnd = DATEFORMAT.format(now.getTime());
+			now.add(Calendar.MONTH, -1);
+			now.get(Calendar.DAY_OF_MONTH);
+			this.firstReceivedStart = DATEFORMAT.format(now.getTime());
 		}
 
 		public SearchOptions build(){
@@ -132,7 +147,9 @@ public class SearchOptions{
 					this.firstReceivedEnd = DATEFORMAT.format(end);
 				}
 			} catch (ParseException e) {
-				System.err.println("RequestOptions: Wrong date format");
+				System.err.println("SearchOptions: Wrong date format. Try MM/DD/YYYY");
+				e.printStackTrace();
+				System.exit(-1);
 			}
 			return this;
 		}
