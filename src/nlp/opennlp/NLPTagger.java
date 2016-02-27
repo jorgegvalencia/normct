@@ -11,22 +11,26 @@ import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;
 
 public class NLPTagger {
-	String model_route;
+	String modelRoute;
 
 	public NLPTagger(String model){
-		model_route = model;
+		modelRoute = model;
+	}
+	
+	public NLPTagger(){
+		modelRoute = "resources/en-pos-maxent.bin";
 	}
 
 	public List<String> posTag(List<String> tokenList){
 		InputStream modelIn = null;
 		List<String> tags = new ArrayList<String>();
-		String[] tokens = new String[tokenList.size()];
-		tokens = tokenList.toArray(tokens);
+		String[] tokensArray = new String[tokenList.size()];
+		tokensArray = tokenList.toArray(tokensArray);
 		try {
-			modelIn = new FileInputStream(model_route);
+			modelIn = new FileInputStream(modelRoute);
 			POSModel model = new POSModel(modelIn);
 			POSTaggerME tagger = new POSTaggerME(model);
-			for(String posTag : tagger.tag(tokens)){
+			for(String posTag : tagger.tag(tokensArray)){
 				tags.add(posTag);
 			}
 		}
@@ -48,33 +52,4 @@ public class NLPTagger {
 		return tags;
 
 	}
-	
-	public String[] posTag(String[] tokens){
-		InputStream modelIn = null;
-		String[] tags = null;
-		try {
-			modelIn = new FileInputStream(model_route);
-			POSModel model = new POSModel(modelIn);
-			POSTaggerME tagger = new POSTaggerME(model);
-			tags = tagger.tag(tokens);
-		}
-		catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if (modelIn != null) {
-				try {
-					modelIn.close();
-				}
-				catch (IOException e) {
-				}
-			}
-		}
-		return tags;
-	}
-	
-	
 }

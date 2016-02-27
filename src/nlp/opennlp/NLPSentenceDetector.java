@@ -12,17 +12,21 @@ import opennlp.tools.sentdetect.SentenceModel;
 import opennlp.tools.util.InvalidFormatException;
 
 public class NLPSentenceDetector {
-	String model_route;
+	String modelRoute;
 
 	public NLPSentenceDetector(String model) {
-		model_route = model;
+		modelRoute = model;
+	}
+	
+	public NLPSentenceDetector() {
+		modelRoute = "resources/en-sent.bin";
 	}
 
 	public List<String> detectSentences(String text) {
 		InputStream modelIn = null;
 		List<String> sentences = new ArrayList<String>();
 		try {
-			modelIn = new FileInputStream(model_route);
+			modelIn = new FileInputStream(modelRoute);
 			SentenceModel model = new SentenceModel(modelIn);
 			SentenceDetectorME sentenceDetector = new SentenceDetectorME(model);
 			for (String sentence : sentenceDetector.sentDetect(text)) {

@@ -12,23 +12,25 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 
 public class NLPTokenizer {
-	String model_route;
+	String modelRoute;
 
 	public NLPTokenizer(String model){
-		model_route = model;
+		modelRoute = model;
 	}
+	
 	public NLPTokenizer(){
-		model_route = "resources/en-token.bin";
+		modelRoute = "resources/en-token.bin";
 	}
+	
 	public List<String> tokenize(String sentence){
 		InputStream modelIn = null;
-		List<String> tokens = new ArrayList<String>();
+		List<String> tokensList = new ArrayList<String>();
 		try {
-			modelIn = new FileInputStream(model_route);
+			modelIn = new FileInputStream(modelRoute);
 			TokenizerModel model = new TokenizerModel(modelIn);
 			Tokenizer tokenizer = new TokenizerME(model);
 			for(String token: tokenizer.tokenize(sentence)){
-				tokens.add(token);
+				tokensList.add(token);
 			}
 		}
 		catch (FileNotFoundException e1) {
@@ -46,33 +48,6 @@ public class NLPTokenizer {
 				}
 			}
 		}
-		return tokens;
-	}
-	
-	public String[] tokenizeArray(String sentence){
-		InputStream modelIn = null;
-		String[] tokens = null;
-		try {
-			modelIn = new FileInputStream(model_route);
-			TokenizerModel model = new TokenizerModel(modelIn);
-			Tokenizer tokenizer = new TokenizerME(model);
-			tokens = tokenizer.tokenize(sentence);
-		}
-		catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			if (modelIn != null) {
-				try {
-					modelIn.close();
-				}
-				catch (IOException e) {
-				}
-			}
-		}
-		return tokens;
+		return tokensList;
 	}
 }
