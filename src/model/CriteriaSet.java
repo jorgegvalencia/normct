@@ -14,11 +14,20 @@ public class CriteriaSet {
 		eclist = getEligibilityCriteriaFromText(nctid, criteria);
 	}
 
+	public String getCriteriaTextBlock() {
+		return criteriaTextBlock;
+	}
+
+	public List<EligibilityCriteria> getECList() {
+		return eclist;
+	}
+
 	private List<EligibilityCriteria> getEligibilityCriteriaFromText(String trial, String criteria) {
-		// Preprocess raw criteria
-		String processed_criteria = Preprocessor.processEligibilityCriteria(criteria);
-		// Get the utterances for each EC
-		List<String> uttList = Preprocessor.getSentencesFromText(processed_criteria);
+		// preprocess raw criteria and split text into sentences
+		String processedCriteria = Preprocessor.processRawCriteriaText(criteria);
+		List<String> uttList = Preprocessor.getSentencesFromText(processedCriteria);
+		
+		// create the elegibility criteria units with the utterances from the sentences
 		List<EligibilityCriteria> ecList = new ArrayList<EligibilityCriteria>();
 		int type = 0;
 		for (int i = 0; i < uttList.size(); i++) { // for each utterance
@@ -31,13 +40,5 @@ public class CriteriaSet {
 			ecList.add(ec);
 		}
 		return ecList;
-	}
-
-	public String getCriteriaTextBlock() {
-		return criteriaTextBlock;
-	}
-
-	public List<EligibilityCriteria> getEclist() {
-		return eclist;
 	}
 }

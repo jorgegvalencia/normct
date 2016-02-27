@@ -8,13 +8,19 @@ import java.util.regex.Pattern;
 import nlp.opennlp.NLPSentenceDetector;
 
 public final class Preprocessor {
+	
 	private static final List<String> STOP_WORDS = new ArrayList<String>(
 			Arrays.asList("and", "by", "for", "in", "of", "or", "the", "to", "with", "no"));
 	private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]+");
+	
+	public static List<String> getSentencesFromText(String text) {
+		NLPSentenceDetector sd = new NLPSentenceDetector();
+		return sd.detectSentences(text);
+	}
 
-	public static String processEligibilityCriteria(String utterance) {
+	public static String processRawCriteriaText(String rawText) {
 		String refinedText;
-		refinedText = ASCII_PATTERN.matcher(utterance).replaceAll(" ");
+		refinedText = ASCII_PATTERN.matcher(rawText).replaceAll(" ");
 		// Elimina los puntos de contenido numericos
 		refinedText = refinedText.replaceAll("([0-9]+\\.(?=\\s))+\\s", " - ");
 		// Elimina los guiones de puntos de contenido
@@ -26,11 +32,6 @@ public final class Preprocessor {
 		refinedText = refinedText.replaceAll("\\s+", " ");
 		refinedText = refinedText.replaceAll("\\\"", "");
 		return refinedText;
-	}
-
-	public static List<String> getSentencesFromText(String text) {
-		NLPSentenceDetector sd = new NLPSentenceDetector("resources/en-sent.bin");
-		return sd.detectSentences(text);
 	}
 
 	public static String removeStopWords(String nounp) {
