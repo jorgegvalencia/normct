@@ -20,6 +20,8 @@ import gov.nih.nlm.nls.metamap.Utterance;
 import nlp.ProcessingUnit;
 
 public class SemanticTypesTest {
+	
+	// Prueba con 5 ensayos de frecuencia de tipos semanticos del UMLS
 
 	public static void main (String args[]){
 
