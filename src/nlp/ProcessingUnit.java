@@ -86,19 +86,22 @@ public class ProcessingUnit {
 					if (currentElement.equals("brief_title")){
 						text = streamReader.getElementText();
 						pu.getCTBuilder().setTitle(text);
-						System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
+						// 	TODO Eliminar System.out
+						// System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
 					}
 					// set the trial topic
 					else if (currentElement.equals("condition")){
 						text = streamReader.getElementText();
 						pu.getCTBuilder().setTopic(text);
-						System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
+//					 	TODO Eliminar System.out
+						// System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
 					}
 					// set specified attributes
 					else if (attributes.contains(currentElement)){
 						text = streamReader.getElementText();
 						pu.getCTBuilder().setAttribute(currentElement,text);
-						System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
+//					 	TODO Eliminar System.out
+						// System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
 						attr.remove(currentElement);
 					}
 					break;
@@ -111,7 +114,8 @@ public class ProcessingUnit {
 							currentElement = streamReader.getLocalName();
 							text = streamReader.getElementText();
 							pu.getCTBuilder().setCriteria((text));
-							System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
+//						 	TODO Eliminar System.out
+							// System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
 						}
 					// sequence of elements brief_summary > textblock
 					} else if (currentElement.equals("brief_summary")) { 
@@ -120,7 +124,8 @@ public class ProcessingUnit {
 							currentElement = streamReader.getLocalName();
 							text = streamReader.getElementText();
 							pu.getCTBuilder().setAttribute("brief_summary", text);
-							System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
+//						 	TODO Eliminar System.out
+							// System.out.println("Attribute: "+ currentElement + "\t Value: "+ text);
 						}
 					} 
 					break;
