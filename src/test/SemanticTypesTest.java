@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import ctgov.CTManager;
+import ctgov.SearchOptions;
 import gov.nih.nlm.nls.metamap.Ev;
 import gov.nih.nlm.nls.metamap.Mapping;
 import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
@@ -28,25 +29,32 @@ public class SemanticTypesTest {
 		MetaMapApiImpl mmapi = new MetaMapApiImpl();
 		mmapi.setHost("192.168.33.10");
 		mmapi.setOptions("-R SNOMEDCT_US -y");
-		String[] trials = {"NCT02701023","NCT02701010","NCT02700984","NCT02700971","NCT02700945"};
-		CTManager.downloadTrials(trials);
+		SearchOptions options = new SearchOptions.SearchOptionsBuilder("breast cancer").build();
+		//CTManager.downloadTrials(options);
 		HashMap<String,Integer> mpp = new HashMap<>();
-		for(String nctid: trials){
-			ProcessingUnit pu = ProcessingUnit.buildProcessingUnit(nctid);
-			pu.setTimeAndBuild(0);
-			String criteria = pu.getClinicalTrial().getCriteria().getCriteriaTextBlock();
-			criteria = Normalizer.normalize(criteria, Normalizer.Form.NFD);
-			String resultString = criteria.replaceAll("[^\\x00-\\x7F]", "");
-			List<Result> resultList =  mmapi.processCitationsFromString(resultString);
-			print(resultList, mpp);
+		HashMap<String,Double> score = new HashMap<>();
+		File[] files = new File("data/trials/").listFiles();
+		for(File f: files){
+			if(f.isFile()){
+				ProcessingUnit pu = new ProcessingUnit(f.getName().replace(".xml", ""));
+				pu.setTime(0);
+				String criteria = pu.getCriteriaSet().getCriteriaTextBlock();
+				criteria = Normalizer.normalize(criteria, Normalizer.Form.NFD);
+				String resultString = criteria.replaceAll("[^\\x00-\\x7F]", "");
+				List<Result> resultList =  mmapi.processCitationsFromString(resultString);
+				print(resultList, mpp, score);
+			}
 		}
 		for(Entry<String, Integer> e: mpp.entrySet()){
-			System.out.println(e.getKey() + "|" + e.getValue());
+			String key = e.getKey();
+			Integer value = e.getValue();
+			//System.out.println(key + "|" + score.get(key));
+			System.out.println(key + "|" + value + "|" + Math.round(score.get(key)/value));
 		}
 
 	}
 
-	public static void print(List<Result> resultList, HashMap<String,Integer> mpp){
+	public static void print(List<Result> resultList, HashMap<String,Integer> mpp, HashMap<String,Double> scores){
 		try{
 			for (Result result: resultList) {
 				for (Utterance utterance: result.getUtteranceList()) {
@@ -54,12 +62,16 @@ public class SemanticTypesTest {
 						for (Mapping map: pcm.getMappingList()) {
 							for (Ev mapEv: map.getEvList()) {
 								String semt = mapEv.getSemanticTypes().toString();
+								double score = mapEv.getScore();
 								if(!mpp.containsKey(semt)){
 									mpp.put(semt,1);
+									scores.put(semt, score*-1);
 								}
 								else{
 									int curr = mpp.get(semt);
+									double currScore = scores.get(semt);
 									mpp.put(semt,curr+1);
+									scores.put(semt,currScore+score*-1);
 								}
 							}
 						}

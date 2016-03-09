@@ -27,7 +27,7 @@ public class NormJDBCTemplate implements NormSnomedDAO {
 		jdbcTemplateObject = new JdbcTemplate(dataSource);
 		if (pu.isProcessed()) {
 			saveClinicalTrial(pu.getClinicalTrial());
-			for (EligibilityCriteria ec : pu.getClinicalTrial().getCriteria().getECList()) {
+			for (EligibilityCriteria ec : pu.getCriteriaSet().getEligibilityCriteriaList()) {
 				saveEligibilityCriteria(ec);
 				for (Match m : ec.getMatches()) {
 					saveConcept(m.getConcept());

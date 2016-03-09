@@ -38,5 +38,11 @@ public class Match {
 	public List<String> getMatchedWords() {
 		return matchedWords;
 	}
+	
+	public void print(){
+		System.out.println("Concept: " + concept.getCui());
+		System.out.println("Term: " + term);
+		System.out.println("Phrase: " + phrase);
+	}
 
 }

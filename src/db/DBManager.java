@@ -77,7 +77,7 @@ public class DBManager {
 		NormJDBCTemplate norm = (NormJDBCTemplate) context.getBean("normJDBCTemplate");
 		if (pu.isProcessed()) {
 			saveClinicalTrial(pu.getClinicalTrial());
-			for (EligibilityCriteria ec : pu.getClinicalTrial().getCriteria().getECList()) {
+			for (EligibilityCriteria ec : pu.getCriteriaSet().getEligibilityCriteriaList()) {
 				saveEligibilityCriteria(ec);
 				for (Match m : ec.getMatches()) {
 					saveConcept(m.getConcept());
@@ -148,7 +148,7 @@ public class DBManager {
 		public void saveProcessingUnit(ProcessingUnit pu) {
 			if (pu.isProcessed()) {
 				saveClinicalTrial(pu.getClinicalTrial());
-				for (EligibilityCriteria ec : pu.getClinicalTrial().getCriteria().getECList()) {
+				for (EligibilityCriteria ec : pu.getCriteriaSet().getEligibilityCriteriaList()) {
 					saveEligibilityCriteria(ec);
 					for (Match m : ec.getMatches()) {
 						saveConcept(m.getConcept());
