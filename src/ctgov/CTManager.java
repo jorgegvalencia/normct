@@ -19,14 +19,19 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import main.Environment;
+
 public class CTManager {
 
-	private static final String BASEPATH = "data/trials/";
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+	private static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
 
+	/**
+	 * Downloads the specified trial
+	 * @param nctid
+	 */
 	public static void downloadTrial(String nctid) {
 		// path to store the new file
-		String filePath = BASEPATH + nctid + ".xml";
+		String filePath = Environment.TRIALS_PATH + nctid + ".xml";
 		try {
 
 			// build the request url
@@ -56,6 +61,12 @@ public class CTManager {
 		}
 	}
 
+	public static void downloadTrials(String[] trials){
+		for(String trial: trials){
+			downloadTrial(trial);
+		}
+	}
+
 	public static void downloadTrials(SearchOptions options){
 		try {
 			// build the request url
@@ -81,8 +92,8 @@ public class CTManager {
 			conn.disconnect();
 			
 			// Extract the zip file
-			String now = dateFormat.format(new Date());//2014_08_06-15_59_48
-			unzip("search_result.zip",BASEPATH+now+"_"+options.getTopic());
+			String now = DATEFORMAT.format(new Date());//2014_08_06-15_59_48
+			unzip("search_result.zip",Environment.TRIALS_PATH); //+now+"_"+options.getTopic()
 			
 			// Delete the zip file
 			Files.deleteIfExists(new File("search_result.zip").toPath());
@@ -93,7 +104,11 @@ public class CTManager {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public static void setDownloadPath(String path){
+		Environment.TRIALS_PATH = path;
+	}
+	
 	/**
 	 * Extracts a zip file specified by the zipFilePath to a directory specified by
 	 * destDirectory (will be created if does not exists)

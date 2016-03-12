@@ -1,0 +1,1 @@
+SELECT semantic_types, COUNT(*) FROM normdb.cmatch GROUP BY semantic_types

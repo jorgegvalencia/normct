@@ -13,12 +13,13 @@ public final class Preprocessor {
 			Arrays.asList("and", "by", "for", "in", "of", "or", "the", "to", "with", "no"));
 	private static final Pattern ASCII_PATTERN = Pattern.compile("[^\\p{ASCII}]+");
 	
-	public static List<String> getSentencesFromText(String text) {
+	public static List<String> getSentencesFromText(String rawText) {
+		String text = processRawCriteriaText(rawText);
 		NLPSentenceDetector sd = new NLPSentenceDetector();
 		return sd.detectSentences(text);
 	}
 
-	public static String processRawCriteriaText(String rawText) {
+	private static String processRawCriteriaText(String rawText) {
 		String refinedText;
 		refinedText = ASCII_PATTERN.matcher(rawText).replaceAll(" ");
 		// Elimina los puntos de contenido numericos

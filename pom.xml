@@ -22,6 +22,11 @@
   		<artifactId>opennlp-tools</artifactId>
   		<version>1.6.0</version>
   	</dependency>
+	<dependency>
+		<groupId>log4j</groupId>
+		<artifactId>log4j</artifactId>
+		<version>1.2.17</version>
+	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-core</artifactId>
@@ -62,5 +67,34 @@
   		<artifactId>poi</artifactId>
   		<version>3.13</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.apache.poi</groupId>
+  		<artifactId>poi-ooxml-schemas</artifactId>
+  		<version>3.14-beta1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.poi</groupId>
+  		<artifactId>poi-ooxml</artifactId>
+  		<version>3.14-beta1</version>
+  	</dependency>
+  	<dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>5.1.31</version>
+    </dependency>
+    <dependency>
+      <groupId>se.sics</groupId>
+      <artifactId>prologbeans</artifactId>
+      <version>4.2.1</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/resources/prologbeans.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.metamap</groupId>
+      <artifactId>metamap-api</artifactId>
+      <version>2.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/resources/MetaMapApi.jar</systemPath>
+    </dependency>
   </dependencies>
 </project>

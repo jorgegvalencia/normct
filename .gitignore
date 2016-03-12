@@ -4,6 +4,8 @@
 .mtj.tmp/
 
 # Package Files #
+*.zip
+*.rar
 *.jar
 *.war
 *.ear
@@ -17,3 +19,15 @@ hs_err_pid*
 .project
 /target/
 .settings/
+
+# Data folder
+data/
+
+# Snomed data files
+resources/SnomedCT*
+
+# Excel files
+*.xlsx
+
+# Sublime settings
+*sublime*
