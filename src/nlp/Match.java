@@ -10,13 +10,15 @@ public class Match {
 	private String term;
 	private String prefered;
 	private List<String> matchedWords;
+	private List<String> semanticTypes;
 
-	public Match(Concept c, String phrase, String t, String pref, List<String> mw) {
+	public Match(Concept c, String phrase, String t, String pref, List<String> mw, List<String> semt) {
 		concept = c;
 		this.phrase = phrase;
 		term = t;
 		prefered = pref;
 		matchedWords = mw;
+		semanticTypes = semt;
 	}
 
 	public Concept getConcept() {
@@ -37,6 +39,10 @@ public class Match {
 
 	public List<String> getMatchedWords() {
 		return matchedWords;
+	}
+	
+	public List<String> getSemanticTypes() {
+		return semanticTypes;
 	}
 	
 	public void print(){

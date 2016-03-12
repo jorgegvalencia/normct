@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.Normalizer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import ctgov.CTManager;
+import main.Environment;
 
 public class ClinicalTrial {
 
@@ -26,12 +26,10 @@ public class ClinicalTrial {
 	private String criteriaTextBlock;
 	private Map<String, String> attributes;
 
-	private static final ArrayList<String> XML_ATTRIBUTES = new ArrayList<>(Arrays.asList("study_type","gender","url","overall_status","lastchanged_date","start_date"));
-
 	public ClinicalTrial(String nctid) {
 		this.nctid = nctid;
 		String filePath = "data/trials/" + nctid + ".xml";
-		ArrayList<String> attr = new ArrayList<>(XML_ATTRIBUTES);
+		ArrayList<String> attr = new ArrayList<>(Environment.XML_ATTRIBUTES);
 
 		if (!checkLocalFile(nctid)) { // if the file is not already downloaded
 			// download the trial
@@ -66,7 +64,7 @@ public class ClinicalTrial {
 						setTopic(text);
 					}
 					// set specified attributes
-					else if (XML_ATTRIBUTES.contains(currentElement)){
+					else if (attr.contains(currentElement)){
 						text = streamReader.getElementText();
 						setAttribute(currentElement,text);
 						attr.remove(currentElement);

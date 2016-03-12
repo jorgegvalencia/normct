@@ -15,6 +15,7 @@ import gov.nih.nlm.nls.metamap.MetaMapApiImpl;
 import gov.nih.nlm.nls.metamap.PCM;
 import gov.nih.nlm.nls.metamap.Result;
 import gov.nih.nlm.nls.metamap.Utterance;
+import main.Environment;
 import model.Concept;
 import model.ConceptFactory;
 import model.EligibilityCriteria;
@@ -22,19 +23,18 @@ import model.EligibilityCriteria;
 public class ConceptExtractor {
 	// private static HashSet<String> excluded = new HashSet<String>(); // CUI
 	private MetaMapApi mmapi;
-	private static String options = "-Q 2 -i -k cell,fish,ftcn,idcn,inpr,menp,mnob,podg,qlco,qnco,spco,tmco -R SNOMEDCT_US";
 	private static NumberFormat format = NumberFormat.getInstance(Locale.US);
 
 	public ConceptExtractor() {
 		mmapi = new MetaMapApiImpl();
-		mmapi.setOptions(options);
+		mmapi.setOptions(Environment.METAMAP_OPTIONS);
 	}
 
 	public ConceptExtractor(String host) {
 		mmapi = new MetaMapApiImpl();
 		if (!host.equals("localhost"))
 			mmapi.setHost(host);
-		mmapi.setOptions(options);
+		mmapi.setOptions(Environment.METAMAP_OPTIONS);
 	}
 
 	public ProcessingUnit process(ProcessingUnit pu, boolean save) {
@@ -46,7 +46,6 @@ public class ConceptExtractor {
 			for (EligibilityCriteria ec : pu.getCriteriaSet().getEligibilityCriteriaList()) {
 				matches = getMetamapMatches(ec.getUtterance());
 				ec.setMatches(matches);
-				int aasd = 0;
 			}
 			// metamap processing ends
 			long endTime = System.nanoTime();
@@ -63,8 +62,10 @@ public class ConceptExtractor {
 			pu.setTime(time);
 		}
 		// save the results in the database
-		if (save)
+		if (save){
 			DBManager.getInstance().saveProcessingUnit(pu);
+			// apply filters in databse with update statements
+		}
 		return pu;
 	}
 
@@ -81,7 +82,7 @@ public class ConceptExtractor {
 								if (c == null)
 									continue;
 								Match match = new Match(c, pcm.getPhrase().getPhraseText(), mapEv.getConceptName(),
-										mapEv.getPreferredName(), mapEv.getMatchedWords());
+										mapEv.getPreferredName(), mapEv.getMatchedWords(), mapEv.getSemanticTypes());
 								matches.add(match);
 							}
 		} catch (Exception e) {
@@ -95,7 +96,8 @@ public class ConceptExtractor {
 		try {
 			resultList = mmapi.processCitationsFromString(text);
 		} catch (Exception e) {
-			System.err.println("Restarting servers...");
+			System.err.println("Metamap server error...");
+			e.printStackTrace();
 		}
 		return resultList;
 	}

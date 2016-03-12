@@ -41,7 +41,9 @@ public class ProcessingUnit {
 			for(EligibilityCriteria ec : criteria.getEligibilityCriteriaList()){
 				for(Match m: ec.getMatches()){
 					m.print();
+					System.out.println("---------------------------");
 				}
+				System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			}
 		}
 	}

@@ -19,10 +19,11 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import main.Environment;
+
 public class CTManager {
 
-	private static String basepath = "data/trials/";
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+	private static final SimpleDateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
 
 	/**
 	 * Downloads the specified trial
@@ -30,7 +31,7 @@ public class CTManager {
 	 */
 	public static void downloadTrial(String nctid) {
 		// path to store the new file
-		String filePath = basepath + nctid + ".xml";
+		String filePath = Environment.TRIALS_PATH + nctid + ".xml";
 		try {
 
 			// build the request url
@@ -91,8 +92,8 @@ public class CTManager {
 			conn.disconnect();
 			
 			// Extract the zip file
-			String now = dateFormat.format(new Date());//2014_08_06-15_59_48
-			unzip("search_result.zip",basepath+now+"_"+options.getTopic());
+			String now = DATEFORMAT.format(new Date());//2014_08_06-15_59_48
+			unzip("search_result.zip",Environment.TRIALS_PATH); //+now+"_"+options.getTopic()
 			
 			// Delete the zip file
 			Files.deleteIfExists(new File("search_result.zip").toPath());
@@ -105,7 +106,7 @@ public class CTManager {
 	}
 	
 	public static void setDownloadPath(String path){
-		basepath = path;
+		Environment.TRIALS_PATH = path;
 	}
 	
 	/**

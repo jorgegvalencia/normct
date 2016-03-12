@@ -9,7 +9,7 @@ public abstract class Report {
 		this.records = records;
 	}
 
-	public void buildReport() {
+	public void printReport() {
 		records.get(0).printHeaders();
 		for (Record record : getRecords()) {
 			record.printRecord();

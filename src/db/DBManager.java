@@ -219,9 +219,9 @@ public class DBManager {
 		}
 
 		private void saveMatch(Match m, String trial, int number) {
-			String sql = "INSERT INTO cmatch (number, trial, sctid, phrase, synonym, prefered_name, matched_words) VALUES(?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+			String sql = "INSERT INTO cmatch (number, trial, sctid, phrase, synonym, prefered_name, matched_words, semantic_types) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
 					+ " number=VALUES(number), trial=VALUES(trial), sctid=VALUES(sctid), phrase=VALUES(phrase),"
-					+ " synonym=VALUES(synonym), prefered_name=VALUES(prefered_name), matched_words=VALUES(matched_words)";
+					+ " synonym=VALUES(synonym), prefered_name=VALUES(prefered_name), matched_words=VALUES(matched_words), semantic_types=VALUES(semantic_types)";
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			for (int i = 0; i < m.getMatchedWords().size(); i++) {
@@ -232,8 +232,18 @@ public class DBManager {
 				}
 			}
 			sb.append("]");
-			jdbcTemplateObject.update(sql, number, trial, m.getConcept().getSctid(), m.getPhrase(), m.getTerm(),
-					m.getPrefered(), sb.toString());
+			// -----
+			StringBuilder sb2 = new StringBuilder();
+			sb2.append("[");
+			for (int i = 0; i < m.getSemanticTypes().size(); i++) {
+				String mw = m.getSemanticTypes().get(i);
+				sb2.append(" " + mw + " ");
+				if (i < m.getSemanticTypes().size() - 1) {
+					sb2.append(",");
+				}
+			}
+			sb2.append("]");
+			jdbcTemplateObject.update(sql, number, trial, m.getConcept().getSctid(), m.getPhrase(), m.getTerm(), m.getPrefered(), sb.toString(), sb2.toString());
 		}
 
 		private void saveAttribute(Entry<String, String> pair, String trial) {
