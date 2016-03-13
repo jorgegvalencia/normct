@@ -212,10 +212,14 @@ public class DBManager {
 
 		@Override
 		public void saveConcept(Concept concept) {
-			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE"
-					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn), hierarchy=VALUES(hierarchy)";
-			jdbcTemplateObject.update(sql, concept.getSctid(), concept.getCui(), concept.getFsn(),
-					concept.getHierarchy());
+			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy,normalform) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn), hierarchy=VALUES(hierarchy), normalform=VALUES(normalform)";
+			jdbcTemplateObject.update(sql, 
+					concept.getSctid(), 
+					concept.getCui(), 
+					concept.getFsn(),
+					concept.getHierarchy(),
+					concept.getNormalForm());
 		}
 
 		private void saveMatch(Match m, String trial, int number) {

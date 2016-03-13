@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import db.DBManager;
+import normalization.CoreDatasetServiceClient;
 
 public class Concept {
 	private static final Pattern pattern = Pattern.compile("\\([a-z\\s/]+\\)\\z");
@@ -12,6 +13,7 @@ public class Concept {
 	private String sctid;
 	private String fsn;
 	private String hierarchy;
+	private String normalForm;
 
 	private DBManager db;
 
@@ -21,16 +23,18 @@ public class Concept {
 			getSCTid();
 			getFullySpecifiedName();
 			getSnomedHierarchy();
+			getNF();
 		} catch (InstantiationException e) {
 			throw new InstantiationException();
 		}
 	}
 
-	public Concept(String cui, String sctid, String fsn, String hierarchy) {
+	public Concept(String cui, String sctid, String fsn, String hierarchy, String normalform) {
 		this.cui = cui;
 		this.sctid = sctid;
 		this.fsn = fsn;
 		this.hierarchy = hierarchy;
+		this.normalForm = normalform;
 	}
 
 	public String getCui() {
@@ -47,6 +51,10 @@ public class Concept {
 
 	public String getHierarchy() {
 		return hierarchy;
+	}
+	
+	public String getNormalForm() {
+		return normalForm;
 	}
 
 	private void getSCTid() throws InstantiationException {
@@ -82,5 +90,10 @@ public class Concept {
 			hierarchy = m.group(0).replaceAll("\\p{Punct}", "");
 		else
 			hierarchy = "N/A";
+	}
+	
+	private void getNF(){
+		CoreDatasetServiceClient normclient = CoreDatasetServiceClient.getInstance();
+		normalForm = normclient.getNormalFormAsString(sctid, true);
 	}
 }

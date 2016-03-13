@@ -17,9 +17,17 @@ public class CoreDatasetServiceClient {
 	private static HashMap<String, String> index = new HashMap<>(); // scui,normalForm
 	private static HashMap<String, String> indexFull = new HashMap<>(); // scui,normalForm
 
-	public CoreDatasetServiceClient() {
+	private CoreDatasetServiceClient() {
 		service = new CoreDatasetService();
 		port = service.getCoreDatasetServiceHttpsSoap12Endpoint();
+	}
+	
+	private static class SingletonHelper {
+		private static final CoreDatasetServiceClient INSTANCE = new CoreDatasetServiceClient();
+	}
+
+	public static CoreDatasetServiceClient  getInstance() {
+		return SingletonHelper.INSTANCE;
 	}
 
 	public String getNormalFormAsString(String scui) {

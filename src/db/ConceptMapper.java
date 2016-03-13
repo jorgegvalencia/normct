@@ -13,8 +13,12 @@ public class ConceptMapper implements RowMapper<Concept> {
 	public Concept mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Concept c = ConceptFactory.getConcept(rs.getString("cui"));
 		if (c == null) {
-			c = new Concept(rs.getString("cui"), rs.getString("sctid"), rs.getString("name"),
-					rs.getString("semantic_type"));
+			c = new Concept(
+					rs.getString("cui"), 
+					rs.getString("sctid"), 
+					rs.getString("name"),
+					rs.getString("semantic_type"),
+					rs.getString("normalform"));
 		}
 		return c;
 	}
