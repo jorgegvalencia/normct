@@ -7,8 +7,8 @@ public class CTDownloadTest {
 
 	public static void main(String[] args) {
 		String nctid = "NCT02692924";
-		CTManager.downloadTrial(nctid);
-		ProcessingUnit pu = new ProcessingUnit(nctid);
+		SearchOptions options = new SearchOptions.SearchOptionsBuilder("breast cancer").setDateRange("01/14/2016", "03/14/2016", false).build();
+		CTManager.downloadTrials(options);
 	}
 
 }

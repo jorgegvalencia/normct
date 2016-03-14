@@ -1,13 +1,18 @@
 package normalization;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.xml.bind.JAXBElement;
+
+import normalization.coredataset.Concept;
 import normalization.coredataset.CoreDatasetService;
 import normalization.coredataset.CoreDatasetServicePortType;
+import normalization.coredataset.KinshipConcepts;
 import normalization.coredataset.NormalizedExpression;
 import normalization.coredataset.SnomedRelationship;
 
@@ -107,8 +112,13 @@ public class CoreDatasetServiceClient {
 		return result;
 	}
 
+	@Deprecated
 	public String getFSN(String scui) {
-		return port.cd2CDMNEW(scui).getCode().getValue().getLabel().getValue();
+		JAXBElement<String> label = port.cd2CDMNEW(scui).getCode().getValue().getLabel();
+		if (label != null)
+			return label.getValue();
+		else
+			return "";
 	}
 
 	public String getRootConcept(String term) {
@@ -117,6 +127,20 @@ public class CoreDatasetServiceClient {
 
 	public List<String> getParents(String term) {
 		return port.getParents(term);
+	}
+	
+	public List<String> getGranparents(String term){
+		return port.getTillGranparents(term);
+	}
+	
+	public List<String> getNextGen(String term){
+		List<KinshipConcepts> list = port.getNextGen(new ArrayList<String>(Arrays.asList(term)));
+		List<Concept> concepts = list.get(0).getSiblings();
+		List<String> ids = new ArrayList<String>();
+		for(Concept c: concepts){
+			ids.add(c.getCode().getValue());
+		}
+		return ids;
 	}
 
 	public boolean isParent(String parent, String child) {
