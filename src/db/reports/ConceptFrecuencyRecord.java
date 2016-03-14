@@ -9,15 +9,16 @@ public class ConceptFrecuencyRecord implements Record {
 	private int frecuency;
 	private String type;
 	private String concept;
+	private String normalform;
 
 	@Override
 	public void printHeaders() {
-		System.out.format("%10s | %10s | %10s | %30s | %-17s \n", "CUI", "SCTID", "FRECUENCY", "TYPE", "CONCEPT");
+		System.out.format("%10s | %10s | %10s | %30s | %-75s | %-50s\n", "CUI", "SCTID", "FRECUENCY", "TYPE", "CONCEPT", "NORMALFORM");
 	}
 
 	@Override
 	public void printRecord() {
-		System.out.format("%10s | %10s | %10d | %30s | %-17s \n", cui, sctid, frecuency, type, concept);
+		System.out.format("%10s | %10s | %10d | %30s | %-75s | %-50s\n", cui, sctid, frecuency, type, concept, normalform);
 	}
 
 	public static Map<Integer, String> getHeaderFields() {
@@ -27,6 +28,7 @@ public class ConceptFrecuencyRecord implements Record {
 		record.put(2, "FRECUENCY");
 		record.put(3, "TYPE");
 		record.put(4, "CONCEPT");
+		record.put(5, "NORMALFORM");
 		return record;
 	}
 
@@ -38,6 +40,7 @@ public class ConceptFrecuencyRecord implements Record {
 		record.put(2, Integer.toString(frecuency));
 		record.put(3, type);
 		record.put(4, concept);
+		record.put(5, normalform);
 		return record;
 	}
 
@@ -60,5 +63,10 @@ public class ConceptFrecuencyRecord implements Record {
 	public void setType(String type) {
 		this.type = type;
 	}
-
+	
+	
+	public void setNormalForm(String normalform){
+		this.normalform = normalform;
+	}
+	
 }

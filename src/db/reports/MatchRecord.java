@@ -10,6 +10,7 @@ public class MatchRecord implements Record {
 	private String phrase;
 	private String synonym;
 	private String matched_words;
+	private String normalform;
 
 	@Override
 	public void printHeaders() {
@@ -93,5 +94,4 @@ public class MatchRecord implements Record {
 	public void setMatchedWords(String matched_words) {
 		this.matched_words = matched_words;
 	}
-
 }

@@ -22,7 +22,7 @@ public class CFReportJDBCTemplate {
 	public List<ConceptFrecuencyRecord> listConceptFrecuencies() {
 		String sql = "SELECT concept.fsn AS CONCEPT, concept.cui AS CUI, "
 				+ "cmatch.sctid AS SCTID, COUNT(cmatch.number) AS FRECUENCY, "
-				+ "concept.hierarchy AS TYPE FROM cmatch, concept WHERE "
+				+ "concept.hierarchy AS TYPE, concept.normalform AS NORMALFORM FROM cmatch, concept WHERE "
 				+ "concept.sctid = cmatch.sctid GROUP BY cmatch.sctid ORDER BY FRECUENCY DESC " + "LIMIT 0,100";
 		List<ConceptFrecuencyRecord> records = jdbcTemplateObject.query(sql, new ConceptFrecuencyMapper());
 		return records;
@@ -47,6 +47,7 @@ public class CFReportJDBCTemplate {
 			cfr.setFrecuency(rs.getInt("FRECUENCY"));
 			cfr.setConcept(rs.getString("CONCEPT"));
 			cfr.setType(rs.getString("TYPE"));
+			cfr.setNormalForm(rs.getString("NORMALFORM"));
 			return cfr;
 		}
 	}

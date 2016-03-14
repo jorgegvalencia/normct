@@ -86,10 +86,12 @@ public class ConceptFrecuencyReport extends Report {
 					// Insert all fields in the row
 					cell = row.createCell(colnum);
 					cell.setCellValue(recordFields.get(colnum));
+					if(colnum == recordFields.size()-2){
+						// Add the last cell of the row corresponding
+						// to the concept to the hyperlink list
+						hyper.add(cell);
+					}
 				}
-				// Add the last cell of the row corresponding
-				// to the concept to the hyperlink list
-				hyper.add(cell);
 
 				////////////////////////////////////////////////////////////////////////
 
@@ -152,6 +154,7 @@ public class ConceptFrecuencyReport extends Report {
 				matchSheet.setColumnWidth(2, (short) ((750) / ((double) 1 / 20)));
 				matchSheet.autoSizeColumn(3);
 				matchSheet.autoSizeColumn(4);
+				matchSheet.autoSizeColumn(5);
 
 				////////////////////////////////////////////////////////////////////////
 			}
@@ -160,6 +163,7 @@ public class ConceptFrecuencyReport extends Report {
 			sheet.autoSizeColumn(2);
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(5);
 			////////////////////////////////////////////////////////////////////////////
 
 			// Free resources
