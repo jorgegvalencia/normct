@@ -134,6 +134,13 @@ public class SearchOptions{
 			return this;
 		}
 
+		/**
+		 * Valid date format MM/dd/yyyy
+		 * @param from
+		 * @param to
+		 * @param updated
+		 * @return
+		 */
 		public SearchOptionsBuilder setDateRange(String from, String to, boolean updated){
 			try {
 				Date start = DATEFORMAT.parse(from);

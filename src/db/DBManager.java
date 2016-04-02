@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -20,6 +21,7 @@ import db.reports.ConceptFrecuencyReport;
 import db.reports.MatchReport;
 import db.reports.TConceptsJDBCTemplate;
 import db.reports.TrialConceptsReport;
+import main.Environment;
 import model.ClinicalTrial;
 import model.Concept;
 import model.EligibilityCriteria;
@@ -115,6 +117,21 @@ public class DBManager {
 	public void saveEligibilityCriteria(EligibilityCriteria ec) {
 		NormJDBCTemplate norm = (NormJDBCTemplate) context.getBean("normJDBCTemplate");
 		norm.saveEligibilityCriteria(ec);
+	}
+	
+	public void filterHierarchies(){
+		List<String> branches = new ArrayList<>(Environment.EXCLUDED_BRANCHES);
+		NormJDBCTemplate norm = (NormJDBCTemplate) context.getBean("normJDBCTemplate");
+		Iterator<String> it = branches.iterator();
+		while(it.hasNext()){
+			String hierarchy = it.next();
+			norm.setActiveHierarchy(hierarchy, false);
+		}
+	}
+	
+	public void removeHierarchyFilter(){
+		NormJDBCTemplate norm = (NormJDBCTemplate) context.getBean("normJDBCTemplate");
+		norm.setAllActive();
 	}
 
 	public List<String> getSCTID(String cui) {
@@ -220,6 +237,21 @@ public class DBManager {
 					concept.getFsn(),
 					concept.getHierarchy(),
 					concept.getNormalForm());
+		}
+
+		private void setActiveHierarchy(String hierarchy, boolean active){
+			int status = active ? 1 : 0;
+			String sql = "UPDATE concept SET active = "+ status +" WHERE hierarchy = \""+ hierarchy+"\"";
+			jdbcTemplateObject.execute("SET SQL_SAFE_UPDATES=0");
+			jdbcTemplateObject.update(sql);
+			jdbcTemplateObject.execute("SET SQL_SAFE_UPDATES=1");
+		}
+
+		private void setAllActive(){
+			String sql = "UPDATE concept SET active = 1";
+			jdbcTemplateObject.execute("SET SQL_SAFE_UPDATES=0");
+			jdbcTemplateObject.update(sql);
+			jdbcTemplateObject.execute("SET SQL_SAFE_UPDATES=1");
 		}
 
 		private void saveMatch(Match m, String trial, int number) {
