@@ -15,7 +15,7 @@ import nlp.ConceptExtractor;
 import nlp.ProcessingUnit;
 
 public class NormCTApp {
-	private static final boolean STORE = false;
+	private static final boolean STORE = true;
 	private static final int MEAN = 10;
 	private static final String NAME = "NormCTApp";
 

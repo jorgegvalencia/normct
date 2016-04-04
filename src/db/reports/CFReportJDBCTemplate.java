@@ -23,7 +23,7 @@ public class CFReportJDBCTemplate {
 		String sql = "SELECT concept.fsn AS CONCEPT, concept.cui AS CUI, "
 				+ "cmatch.sctid AS SCTID, COUNT(cmatch.number) AS FRECUENCY, "
 				+ "concept.hierarchy AS TYPE, concept.normalform AS NORMALFORM FROM cmatch, concept WHERE "
-				+ "concept.sctid = cmatch.sctid GROUP BY cmatch.sctid ORDER BY FRECUENCY DESC " + "LIMIT 0,100";
+				+ "concept.sctid = cmatch.sctid AND concept.active = 1 GROUP BY cmatch.sctid ORDER BY FRECUENCY DESC " + "LIMIT 0,100";
 		List<ConceptFrecuencyRecord> records = jdbcTemplateObject.query(sql, new ConceptFrecuencyMapper());
 		return records;
 	}
@@ -32,7 +32,7 @@ public class CFReportJDBCTemplate {
 		String sql = "SELECT concept.fsn, cmatch.trial, cmatch.phrase, cmatch.synonym, cmatch.matched_words, "
 				+ " eligibility_criteria.utterance FROM cmatch, concept, eligibility_criteria WHERE "
 				+ " cmatch.sctid = concept.sctid AND cmatch.number = eligibility_criteria.number AND "
-				+ " cmatch.trial = eligibility_criteria.trial AND cmatch.sctid = '" + sctid + "' LIMIT 0,50";
+				+ " concept.active = 1 AND cmatch.trial = eligibility_criteria.trial AND cmatch.sctid = '" + sctid + "' LIMIT 0,50";
 		List<MatchRecord> records = jdbcTemplateObject.query(sql, new MatchMapper());
 		return records;
 	}

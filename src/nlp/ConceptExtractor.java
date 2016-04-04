@@ -64,7 +64,8 @@ public class ConceptExtractor {
 		// save the results in the database
 		if (save){
 			DBManager.getInstance().saveProcessingUnit(pu);
-			// apply filters in databse with update statements
+			// apply filters in database with update statements
+			DBManager.getInstance().filterHierarchies();
 		}
 		return pu;
 	}

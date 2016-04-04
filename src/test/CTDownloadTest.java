@@ -7,7 +7,7 @@ public class CTDownloadTest {
 
 	public static void main(String[] args) {
 		String nctid = "NCT02692924";
-		SearchOptions options = new SearchOptions.SearchOptionsBuilder("breast cancer").setDateRange("01/14/2016", "03/14/2016", false).build();
+		SearchOptions options = new SearchOptions.SearchOptionsBuilder("breast cancer").setDateRange("04/10/2015", "04/04/2016", false).build();
 		CTManager.downloadTrials(options);
 	}
 
