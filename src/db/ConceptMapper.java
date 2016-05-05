@@ -18,7 +18,8 @@ public class ConceptMapper implements RowMapper<Concept> {
 					rs.getString("sctid"), 
 					rs.getString("name"),
 					rs.getString("semantic_type"),
-					rs.getString("normalform"));
+					rs.getString("normalform"),
+					rs.getString("foucs_concept"));
 		}
 		return c;
 	}

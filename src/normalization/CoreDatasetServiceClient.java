@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.bind.JAXBElement;
@@ -33,6 +34,25 @@ public class CoreDatasetServiceClient {
 
 	public static CoreDatasetServiceClient  getInstance() {
 		return SingletonHelper.INSTANCE;
+	}
+	
+	public String getNFFocusConcept(String scui){
+		NormalizedExpression expression = port.getShortNormalForm(scui);
+		String focusConceptCode = expression.getFocusConcept().getValue();
+		return focusConceptCode;
+	}
+	
+	public HashMap<String, String> getNFRefinements(String scui){
+		HashMap<String, String> refinements = new HashMap<>();
+		NormalizedExpression expression = port.getShortNormalForm(scui);
+		List<SnomedRelationship> relationshipList = expression.getRelationships();
+		if (!relationshipList.isEmpty()) {
+			for (int i = 0; i < relationshipList.size(); i++) {
+				List<String> pair = getNormalizedExpressionRefinement(relationshipList.get(i));
+				refinements.put(pair.get(0), pair.get(1));
+			}
+		}
+		return refinements;
 	}
 
 	public String getNormalFormAsString(String scui) {
@@ -76,40 +96,6 @@ public class CoreDatasetServiceClient {
 			index.put(scui, sb.toString());
 		}
 		return sb.toString();
-	}
-
-	private String getSnomedRelationshipAsString(SnomedRelationship snrel, boolean term) {
-		String relCode = snrel.getRelationship().getValue();
-		String relTerm = snrel.getRelationshipTitle().getValue();
-		String relValue = getNormalizedExpressionAsString(snrel.getRelationshipValue().getValue(), term);
-		String result;
-		if (term) {
-			result = relCode + "|" + relTerm + "|=" + relValue;
-		} else {
-			result = relCode + "=" + relValue;
-		}
-		return result;
-	}
-
-	private String getNormalizedExpressionAsString(NormalizedExpression expression, boolean term) {
-		String focusConceptCode = expression.getFocusConcept().getValue();
-		String focusConcept = expression.getFocusConceptTitle().getValue();
-		String result;
-		if (term) {
-			result = focusConceptCode + "|" + focusConcept + "|";
-		} else {
-			result = focusConceptCode;
-		}
-		List<SnomedRelationship> relationshipList = expression.getRelationships();
-		if (!relationshipList.isEmpty()) {
-			for (int i = 0; i < relationshipList.size(); i++) {
-				result += getSnomedRelationshipAsString(relationshipList.get(i), term);
-				if (i < relationshipList.size() - 1) {
-					result += ",";
-				}
-			}
-		}
-		return result;
 	}
 
 	@Deprecated
@@ -161,6 +147,56 @@ public class CoreDatasetServiceClient {
 			}
 		}
 		return l;
+	}
+
+
+
+	private String getSnomedRelationshipAsString(SnomedRelationship snrel, boolean term) {
+		String relCode = snrel.getRelationship().getValue();
+		String relTerm = snrel.getRelationshipTitle().getValue();
+		String relValue = getNormalizedExpressionAsString(snrel.getRelationshipValue().getValue(), term);
+		String result;
+		if (term) {
+			result = relCode + "|" + relTerm + "|=" + relValue;
+		} else {
+			result = relCode + "=" + relValue;
+		}
+		return result;
+	}
+
+
+
+	private String getNormalizedExpressionAsString(NormalizedExpression expression, boolean term) {
+		String focusConceptCode = expression.getFocusConcept().getValue();
+		String focusConcept = expression.getFocusConceptTitle().getValue();
+		String result;
+		if (term) {
+			result = focusConceptCode + "|" + focusConcept + "|";
+		} else {
+			result = focusConceptCode;
+		}
+		List<SnomedRelationship> relationshipList = expression.getRelationships();
+		if (!relationshipList.isEmpty()) {
+			for (int i = 0; i < relationshipList.size(); i++) {
+				result += getSnomedRelationshipAsString(relationshipList.get(i), term);
+				if (i < relationshipList.size() - 1) {
+					result += ",";
+				}
+			}
+		}
+		return result;
+	}
+	
+	private List<String> getNormalizedExpressionRefinement(SnomedRelationship expression){
+		List<String> pair = new ArrayList<>();
+		// only one relationship value
+		if(expression.getRelationship() != null){
+			pair.add(0, expression.getRelationship().getValue());
+			pair.add(1, expression.getRelationshipValue().getValue().getFocusConcept().getValue());
+		} else {
+			pair = null;
+		}
+		return pair;
 	}
 
 }

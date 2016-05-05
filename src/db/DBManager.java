@@ -169,6 +169,7 @@ public class DBManager {
 					saveEligibilityCriteria(ec);
 					for (Match m : ec.getMatches()) {
 						saveConcept(m.getConcept());
+						// saveNormalFormExpression
 						saveMatch(m, ec.getTrial(), ec.getNumber());
 					}
 				}
@@ -229,14 +230,18 @@ public class DBManager {
 
 		@Override
 		public void saveConcept(Concept concept) {
-			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy,normalform) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE"
-					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn), hierarchy=VALUES(hierarchy), normalform=VALUES(normalform)";
+			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy,normalform,focus_concept) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn), hierarchy=VALUES(hierarchy), normalform=VALUES(normalform), focus_concept=VALUES(focus_concept)";
 			jdbcTemplateObject.update(sql, 
 					concept.getSctid(), 
 					concept.getCui(), 
 					concept.getFsn(),
 					concept.getHierarchy(),
-					concept.getNormalForm());
+					concept.getNormalForm(),
+					concept.getFocusConcept());
+			for (Entry<String, String> entry : concept.getNFRefinements().entrySet()) {
+				saveRefinement(entry, concept.getSctid());
+			}
 		}
 
 		private void setActiveHierarchy(String hierarchy, boolean active){
@@ -286,6 +291,12 @@ public class DBManager {
 			String sql = "INSERT INTO attribute (trial, attribute, value) VALUES(?,?,?) ON DUPLICATE KEY UPDATE"
 					+ " trial=VALUES(trial), attribute=VALUES(attribute), value=VALUES(value)";
 			jdbcTemplateObject.update(sql, trial, pair.getKey(), pair.getValue());
+		}
+		
+		private void saveRefinement(Entry<String, String> pair, String sctid){
+			String sql = "INSERT INTO refinement (sctid, attribute_concept, value_concept) VALUES(?,?,?) ON DUPLICATE KEY UPDATE"
+					+ " sctid=VALUES(sctid), attribute_concept=VALUES(attribute_concept), value_concept=VALUES(value_concept)";
+			jdbcTemplateObject.update(sql, sctid, pair.getKey(), pair.getValue());
 		}
 	}
 

@@ -1,5 +1,6 @@
 package model;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ public class Concept {
 	private String fsn;
 	private String hierarchy;
 	private String normalForm;
+	private String focusConcept;
 
 	private DBManager db;
 
@@ -29,12 +31,13 @@ public class Concept {
 		}
 	}
 
-	public Concept(String cui, String sctid, String fsn, String hierarchy, String normalform) {
+	public Concept(String cui, String sctid, String fsn, String hierarchy, String normalform, String focusConcept) {
 		this.cui = cui;
 		this.sctid = sctid;
 		this.fsn = fsn;
 		this.hierarchy = hierarchy;
 		this.normalForm = normalform;
+		this.focusConcept = focusConcept;
 	}
 
 	public String getCui() {
@@ -56,6 +59,10 @@ public class Concept {
 	public String getNormalForm() {
 		return normalForm;
 	}
+	
+	public String getFocusConcept() {
+		return focusConcept;
+	}
 
 	private void getSCTid() throws InstantiationException {
 		if (db == null)
@@ -71,7 +78,6 @@ public class Concept {
 					sctid = candidate;
 			}
 		}
-
 	}
 
 	private void getFullySpecifiedName() throws InstantiationException {
@@ -95,5 +101,11 @@ public class Concept {
 	private void getNF(){
 		CoreDatasetServiceClient normclient = CoreDatasetServiceClient.getInstance();
 		normalForm = normclient.getNormalFormAsString(sctid, true);
+		focusConcept = normclient.getNFFocusConcept(sctid);
+	}
+	
+	public HashMap<String, String> getNFRefinements() {
+		CoreDatasetServiceClient normclient = CoreDatasetServiceClient.getInstance();
+		return normclient.getNFRefinements(sctid);
 	}
 }
