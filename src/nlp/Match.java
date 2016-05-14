@@ -11,14 +11,16 @@ public class Match {
 	private String prefered;
 	private List<String> matchedWords;
 	private List<String> semanticTypes;
+	private int negationStatus;
 
-	public Match(Concept c, String phrase, String t, String pref, List<String> mw, List<String> semt) {
+	public Match(Concept c, String phrase, String t, String pref, List<String> mw, List<String> semt, int neg) {
 		concept = c;
 		this.phrase = phrase;
 		term = t;
 		prefered = pref;
 		matchedWords = mw;
 		semanticTypes = semt;
+		negationStatus = neg;
 	}
 
 	public Concept getConcept() {
@@ -45,6 +47,10 @@ public class Match {
 		return semanticTypes;
 	}
 	
+	public int getNegationStatus() {
+		return negationStatus;
+	}
+
 	public void print(){
 		System.out.println("Concept: " + concept.getCui());
 		System.out.println("Term: " + term);

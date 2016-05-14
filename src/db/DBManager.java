@@ -260,9 +260,9 @@ public class DBManager {
 		}
 
 		private void saveMatch(Match m, String trial, int number) {
-			String sql = "INSERT INTO cmatch (number, trial, sctid, phrase, synonym, prefered_name, matched_words, semantic_types) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+			String sql = "INSERT INTO cmatch (number, trial, sctid, phrase, synonym, prefered_name, matched_words, semantic_types, negated) VALUES (?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
 					+ " number=VALUES(number), trial=VALUES(trial), sctid=VALUES(sctid), phrase=VALUES(phrase),"
-					+ " synonym=VALUES(synonym), prefered_name=VALUES(prefered_name), matched_words=VALUES(matched_words), semantic_types=VALUES(semantic_types)";
+					+ " synonym=VALUES(synonym), prefered_name=VALUES(prefered_name), matched_words=VALUES(matched_words), semantic_types=VALUES(semantic_types), negated=VALUES(negated)";
 			StringBuilder sb = new StringBuilder();
 			sb.append("[");
 			for (int i = 0; i < m.getMatchedWords().size(); i++) {
@@ -284,7 +284,7 @@ public class DBManager {
 				}
 			}
 			sb2.append("]");
-			jdbcTemplateObject.update(sql, number, trial, m.getConcept().getSctid(), m.getPhrase(), m.getTerm(), m.getPrefered(), sb.toString(), sb2.toString());
+			jdbcTemplateObject.update(sql, number, trial, m.getConcept().getSctid(), m.getPhrase(), m.getTerm(), m.getPrefered(), sb.toString(), sb2.toString(), m.getNegationStatus());
 		}
 
 		private void saveAttribute(Entry<String, String> pair, String trial) {

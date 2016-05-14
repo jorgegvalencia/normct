@@ -83,7 +83,7 @@ public class ConceptExtractor {
 								if (c == null)
 									continue;
 								Match match = new Match(c, pcm.getPhrase().getPhraseText(), mapEv.getConceptName(),
-										mapEv.getPreferredName(), mapEv.getMatchedWords(), mapEv.getSemanticTypes());
+										mapEv.getPreferredName(), mapEv.getMatchedWords(), mapEv.getSemanticTypes(), mapEv.getNegationStatus());
 								matches.add(match);
 							}
 		} catch (Exception e) {
