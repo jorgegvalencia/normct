@@ -18,7 +18,7 @@ public class NLPTagger {
 	}
 	
 	public NLPTagger(){
-		modelRoute = "resources/en-pos-maxent.bin";
+		modelRoute = "resources/opennlp/en-pos-maxent.bin";
 	}
 
 	public List<String> posTag(List<String> tokenList){

@@ -1,11 +1,15 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -20,6 +24,9 @@ public class NormCTApp {
 	private static final String NAME = "NormCTApp";
 
 	public static void main(String[] args) {
+		// read properties config file
+		loadConfig();
+		
 		if (args.length == 6 && args[0].equals("-f") && args[2].equals("-o") && args[4].equals("-l")) {
 			String filepath = args[1];
 			if (new File(filepath).getAbsoluteFile().exists()) {
@@ -108,6 +115,59 @@ public class NormCTApp {
 		ProcessingUnit pu = new ProcessingUnit(nctid);
 		ce.process(pu, STORE);
 		System.out.println(pu.getTime() + " s");
+		System.out.println("...done");
 		return pu;
+	}
+	
+	private static void loadConfig(){
+		Properties config = new Properties();
+		InputStream input = null;
+		
+    	try {
+        
+    		String filename = "config.properties";
+    		input = NormCTApp.class.getClassLoader().getResourceAsStream(filename);
+    		if(input==null){
+    	            System.out.println("Sorry, unable to find " + filename);
+    		    return;
+    		}
+    		//load a properties file from class path, inside static method
+    		config.load(input);
+    		
+    		System.out.println(config.getProperty("nonexistant"));
+    	    
+    	    String metamap_host = config.getProperty("metamap.host");
+    	    String metamap_options = config.getProperty("metamap.options");
+    	    String trials_path = config.getProperty("trials.path");
+    	    String excluded_snomed_hierarchies = config.getProperty("texcluded.snomed.hierarchies");
+    	        	    
+    	    Environment.METAMAP_HOST = metamap_host == null? Environment.METAMAP_HOST : metamap_host;
+    	    Environment.METAMAP_OPTIONS = metamap_options == null? Environment.METAMAP_OPTIONS : metamap_options;
+    	    Environment.TRIALS_PATH = trials_path == null? Environment.TRIALS_PATH : trials_path;
+    	    
+    	    if(excluded_snomed_hierarchies != null){
+        	    ArrayList<String> hierarchies = new ArrayList<>(Arrays.asList(excluded_snomed_hierarchies.split(",")));
+    	    	for(String h: hierarchies){
+    	    		h.trim();
+    	    	}
+    	    	Environment.EXCLUDED_BRANCHES = excluded_snomed_hierarchies == null? Environment.EXCLUDED_BRANCHES : hierarchies;
+    	    }
+    	    
+    	    System.out.println(Environment.METAMAP_HOST);
+    	    System.out.println(Environment.METAMAP_OPTIONS);
+    	    System.out.println(Environment.TRIALS_PATH);
+    	    System.out.println(Environment.EXCLUDED_BRANCHES);
+ 
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+        } finally{
+        	if(input!=null){
+        		try {
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        	}
+        }
 	}
 }

@@ -239,8 +239,10 @@ public class DBManager {
 					concept.getHierarchy(),
 					concept.getNormalForm(),
 					concept.getFocusConcept());
-			for (Entry<String, String> entry : concept.getNFRefinements().entrySet()) {
-				saveRefinement(entry, concept.getSctid());
+			if(concept.getNFRefinements() != null){
+				for (Entry<String, String> entry : concept.getNFRefinements().entrySet()) {
+					saveRefinement(entry, concept.getSctid());
+				}
 			}
 		}
 
@@ -294,9 +296,21 @@ public class DBManager {
 		}
 		
 		private void saveRefinement(Entry<String, String> pair, String sctid){
-			String sql = "INSERT INTO refinement (sctid, attribute_concept, value_concept) VALUES(?,?,?) ON DUPLICATE KEY UPDATE"
-					+ " sctid=VALUES(sctid), attribute_concept=VALUES(attribute_concept), value_concept=VALUES(value_concept)";
-			jdbcTemplateObject.update(sql, sctid, pair.getKey(), pair.getValue());
+			String sql = "INSERT INTO refinement (sctid, attribute_fsn, attribute_concept, value_fsn, value_concept) VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+					+ " sctid=VALUES(sctid), attribute_fsn=VALUES(attribute_fsn), attribute_concept=VALUES(attribute_concept), value_fsn=VALUES(value_fsn), value_concept=VALUES(value_concept)";
+			String attr_fsn = getRefinementConceptFSN(pair.getKey());
+			String value_fsn = getRefinementConceptFSN(pair.getValue());
+			jdbcTemplateObject.update(sql, sctid, attr_fsn, pair.getKey(), value_fsn, pair.getValue());
+		}
+		
+		private String getRefinementConceptFSN(String sctid){
+			DBManager db = DBManager.getInstance();
+			List<String> fsn = db.getFSN(sctid);
+			if (fsn != null && fsn.size() > 0){
+				return fsn.get(0);
+			} else {
+				return "";
+			}
 		}
 	}
 
@@ -346,10 +360,11 @@ public class DBManager {
 		}
 
 		public List<String> getFSN(String sctid) {
+			// AND curr_description_s.term NOT LIKE '%(qualifier value)'" + "
 			try {
 				String sql = "SELECT term FROM curr_concept_s, curr_description_s WHERE curr_concept_s.id = curr_description_s.conceptid "
 						+ "AND curr_concept_s.id= ? AND curr_description_s.term LIKE '%(%)'"
-						+ "AND curr_description_s.term NOT LIKE '%(qualifier value)'" + "AND curr_concept_s.active='1'"
+						+ "AND curr_concept_s.active='1'"
 						+ "AND curr_description_s.active='1';";
 				return jdbcTemplateObject.queryForList(sql, new Object[] { sctid }, String.class);
 			} catch (EmptyResultDataAccessException e) {

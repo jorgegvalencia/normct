@@ -68,8 +68,11 @@ public class Concept {
 		if (db == null)
 			db = DBManager.getInstance();
 		List<String> candidates = db.getSCTID(cui);
-		if (candidates.size() < 1)
+//		System.out.println("CUI: "+ cui + " candidates: "+candidates);
+		if (candidates.size() < 1){
+//			System.out.println("Peto aqui 1");
 			throw new InstantiationException("Could not resolve the SnomedCT identifier for the concept " + cui);
+		}
 		else {
 			int status = 0;
 			for (String candidate : candidates) {
@@ -84,8 +87,10 @@ public class Concept {
 		if (db == null)
 			db = DBManager.getInstance();
 		List<String> fsn = db.getFSN(sctid);
-		if (fsn == null || fsn.size() < 1)
+//		System.out.println("SCTID:"+sctid +"FSN:"+ fsn);
+		if (fsn == null || fsn.size() < 1){
 			throw new InstantiationException("Could not resolve the Fully Specified Name for the concept " + cui);
+		}
 		else
 			this.fsn = fsn.get(0);
 	}

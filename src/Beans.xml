@@ -5,28 +5,35 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     
+    <bean 
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>file:config.properties</value>
+		</property>
+	</bean>
+    
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/normdb" />
-		<property name="username" value="dbuser" />
-		<property name="password" value="1234" />
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 	</bean>
 	
 	<bean id="metathesaurus"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://kandel.dia.fi.upm.es:3306/metathesaurus" />
-		<property name="username" value="umls" />
-		<property name="password" value="terminology_service" />
+		<property name="url" value="${jdbc.kandel}" />
+		<property name="username" value="${jdbc.kandeluser}" />
+		<property name="password" value="${jdbc.kandelpass}" />
 	</bean>
 	
 	<bean id="snomedct"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/snomedct" />
-		<property name="username" value="dbuser" />
-		<property name="password" value="1234" />
+		<property name="url" value="${jdbc.snomedct}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 	</bean>
 	
 	<bean id="normJDBCTemplate" class="db.DBManager$NormJDBCTemplate">

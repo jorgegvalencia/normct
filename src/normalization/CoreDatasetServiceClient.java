@@ -52,6 +52,8 @@ public class CoreDatasetServiceClient {
 				refinements.put(pair.get(0), pair.get(1));
 			}
 		}
+		if(refinements.isEmpty())
+			refinements = null;
 		return refinements;
 	}
 

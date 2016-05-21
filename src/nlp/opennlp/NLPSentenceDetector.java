@@ -19,7 +19,7 @@ public class NLPSentenceDetector {
 	}
 	
 	public NLPSentenceDetector() {
-		modelRoute = "resources/en-sent.bin";
+		modelRoute = "resources/opennlp/en-sent.bin";
 	}
 
 	public List<String> detectSentences(String text) {

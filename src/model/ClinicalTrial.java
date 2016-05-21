@@ -28,7 +28,7 @@ public class ClinicalTrial {
 
 	public ClinicalTrial(String nctid) {
 		this.nctid = nctid;
-		String filePath = "data/trials/" + nctid + ".xml";
+		String filePath = Environment.TRIALS_PATH + nctid + ".xml";
 		ArrayList<String> attr = new ArrayList<>(Environment.XML_ATTRIBUTES);
 
 		if (!checkLocalFile(nctid)) { // if the file is not already downloaded
@@ -169,7 +169,7 @@ public class ClinicalTrial {
 	}
 
 	private static boolean checkLocalFile(String nctid) {
-		String filePath = "data/trials/" + nctid + ".xml";
+		String filePath = Environment.TRIALS_PATH + nctid + ".xml";
 		File f = new File(filePath);
 		return f.exists();
 	}

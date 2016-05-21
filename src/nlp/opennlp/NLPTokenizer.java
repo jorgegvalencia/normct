@@ -19,7 +19,7 @@ public class NLPTokenizer {
 	}
 	
 	public NLPTokenizer(){
-		modelRoute = "resources/en-token.bin";
+		modelRoute = "resources/opennlp/en-token.bin";
 	}
 	
 	public List<String> tokenize(String sentence){

@@ -98,7 +98,7 @@ public class ConceptExtractor {
 			resultList = mmapi.processCitationsFromString(text);
 		} catch (Exception e) {
 			System.err.println("Metamap server error...");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return resultList;
 	}
