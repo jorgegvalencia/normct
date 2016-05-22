@@ -54,7 +54,7 @@ public class ConceptExtractor {
 			Number number;
 			double time = 0;
 			try {
-				number = format.parse(String.format("%.2f", (endTime - startTime) / Math.pow(10, 11)));
+				number = format.parse(String.format("%.4f", (startTime - endTime) / Math.pow(10, 9)));
 				time = number.doubleValue();
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -99,6 +99,7 @@ public class ConceptExtractor {
 		} catch (Exception e) {
 			System.err.println("Metamap server error...");
 //			e.printStackTrace();
+			System.exit(-1);
 		}
 		return resultList;
 	}

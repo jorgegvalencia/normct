@@ -25,8 +25,7 @@ public class NormCTApp {
 
 	public static void main(String[] args) {
 		// read properties config file
-		loadConfig();
-		
+		loadConfig();		
 		if (args.length == 6 && args[0].equals("-f") && args[2].equals("-o") && args[4].equals("-l")) {
 			String filepath = args[1];
 			if (new File(filepath).getAbsoluteFile().exists()) {
@@ -42,6 +41,12 @@ public class NormCTApp {
 		} else if (args.length == 2 && args[0].equals("-t")) {
 			String trial = args[1];
 			processTrial(trial);
+		} else if (args.length > 1 && args[0].equals("-tl")) {
+			List<String> trials = new ArrayList<String>();
+			for(int i=1; i< args.length; i++){
+				trials.add(args[i]);
+			}
+			processTrialList(trials);
 		} else
 			usage();
 	}
@@ -99,9 +104,26 @@ public class NormCTApp {
 				System.out.print(" [" + j + "]" + "[" + f.getName().replace(".xml", "") + "] ");
 				ProcessingUnit pu = new ProcessingUnit (f.getName().replace(".xml", ""));
 				ce.process(pu, STORE);
-				System.out.println(pu.getTime() + " s");
+				System.out.println(pu.getTime()*(-1));
 				pulist.add(pu);
 			}
+		}
+		System.out.println("...done");
+		return pulist;
+	}
+	
+	private static List<ProcessingUnit> processTrialList(List<String> trials) {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		ConceptExtractor ce = new ConceptExtractor(Environment.METAMAP_HOST);
+		List<ProcessingUnit> pulist = new ArrayList<>();
+		
+		// Processing
+		for(int i=0; i < trials.size(); i++){
+			System.out.print(dateFormat.format(new Date())+" ["+(i+1)+"]" + "[" + trials.get(i) + "] ");
+			ProcessingUnit pu = new ProcessingUnit(trials.get(i));
+			ce.process(pu, STORE);
+			System.out.println(pu.getTime()*(-1));
+			pulist.add(pu);
 		}
 		System.out.println("...done");
 		return pulist;
@@ -110,11 +132,10 @@ public class NormCTApp {
 	private static ProcessingUnit processTrial(String nctid) {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		ConceptExtractor ce = new ConceptExtractor(Environment.METAMAP_HOST);
-		System.out.print(dateFormat.format(new Date()));
-		System.out.print(" [*]" + "[" + nctid + "] ");
+		System.out.print(dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ");
 		ProcessingUnit pu = new ProcessingUnit(nctid);
 		ce.process(pu, STORE);
-		System.out.println(pu.getTime() + " s");
+		System.out.println(pu.getTime()*(-1));
 		System.out.println("...done");
 		return pu;
 	}
@@ -133,13 +154,11 @@ public class NormCTApp {
     		}
     		//load a properties file from class path, inside static method
     		config.load(input);
-    		
-    		System.out.println(config.getProperty("nonexistant"));
     	    
     	    String metamap_host = config.getProperty("metamap.host");
     	    String metamap_options = config.getProperty("metamap.options");
     	    String trials_path = config.getProperty("trials.path");
-    	    String excluded_snomed_hierarchies = config.getProperty("texcluded.snomed.hierarchies");
+    	    String excluded_snomed_hierarchies = config.getProperty("excluded.snomed.hierarchies");
     	        	    
     	    Environment.METAMAP_HOST = metamap_host == null? Environment.METAMAP_HOST : metamap_host;
     	    Environment.METAMAP_OPTIONS = metamap_options == null? Environment.METAMAP_OPTIONS : metamap_options;
@@ -152,11 +171,6 @@ public class NormCTApp {
     	    	}
     	    	Environment.EXCLUDED_BRANCHES = excluded_snomed_hierarchies == null? Environment.EXCLUDED_BRANCHES : hierarchies;
     	    }
-    	    
-    	    System.out.println(Environment.METAMAP_HOST);
-    	    System.out.println(Environment.METAMAP_OPTIONS);
-    	    System.out.println(Environment.TRIALS_PATH);
-    	    System.out.println(Environment.EXCLUDED_BRANCHES);
  
     	} catch (IOException ex) {
     		ex.printStackTrace();
