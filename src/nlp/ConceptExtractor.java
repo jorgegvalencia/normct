@@ -38,6 +38,10 @@ public class ConceptExtractor {
 	}
 
 	public ProcessingUnit process(ProcessingUnit pu, boolean save) {
+		if(pu.getClinicalTrial().getNctid() == null){
+			pu.setTime(-1);
+			return pu;
+		}
 		boolean processed = pu.isProcessed();
 		if (!processed){
 			List<Match> matches;

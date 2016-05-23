@@ -29,7 +29,7 @@ public class CTManager {
 	 * Downloads the specified trial
 	 * @param nctid
 	 */
-	public static void downloadTrial(String nctid) {
+	public static boolean downloadTrial(String nctid) {
 		// path to store the new file
 		String filePath = Environment.TRIALS_PATH + nctid + ".xml";
 		try {
@@ -51,14 +51,16 @@ public class CTManager {
 					bw.write(line); bw.newLine();
 				}
 				bw.close();
+				conn.disconnect();
+				return true;
 			}
 			conn.disconnect();
-
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public static void downloadTrials(String[] trials){
@@ -90,25 +92,25 @@ public class CTManager {
 				in.close();
 			}
 			conn.disconnect();
-			
+
 			// Extract the zip file
 			String now = DATEFORMAT.format(new Date());//2014_08_06-15_59_48
 			unzip("search_result.zip",Environment.TRIALS_PATH); //+now+"_"+options.getTopic()
-			
+
 			// Delete the zip file
 			Files.deleteIfExists(new File("search_result.zip").toPath());
-			
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void setDownloadPath(String path){
 		Environment.TRIALS_PATH = path;
 	}
-	
+
 	/**
 	 * Extracts a zip file specified by the zipFilePath to a directory specified by
 	 * destDirectory (will be created if does not exists)

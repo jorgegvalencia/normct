@@ -100,15 +100,14 @@ public class NormCTApp {
 				break;
 			if (f.getName().contains("NCT")) {
 				j++;
-				System.out.print(dateFormat.format(new Date()));
-				System.out.print(" [" + j + "]" + "[" + f.getName().replace(".xml", "") + "] ");
+				System.out.print("> "+dateFormat.format(new Date()) + " [" + j + "]" + "[" + f.getName().replace(".xml", "") + "] ");
 				ProcessingUnit pu = new ProcessingUnit (f.getName().replace(".xml", ""));
 				ce.process(pu, STORE);
-				System.out.println(pu.getTime()*(-1));
+				System.out.println("< "+dateFormat.format(new Date()) + " [" + j + "]" + "[" + f.getName().replace(".xml", "") + "] " + pu.getTime()*(-1));
 				pulist.add(pu);
 			}
 		}
-		System.out.println("...done");
+		System.out.println("< Done");
 		return pulist;
 	}
 	
@@ -119,24 +118,32 @@ public class NormCTApp {
 		
 		// Processing
 		for(int i=0; i < trials.size(); i++){
-			System.out.print(dateFormat.format(new Date())+" ["+(i+1)+"]" + "[" + trials.get(i) + "] ");
+			System.out.println("> "+dateFormat.format(new Date())+" ["+(i+1)+"]" + "[" + trials.get(i) + "] ");
 			ProcessingUnit pu = new ProcessingUnit(trials.get(i));
 			ce.process(pu, STORE);
-			System.out.println(pu.getTime()*(-1));
+			if(pu.getTime() != -1){
+				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] " + pu.getTime()*(-1));
+			} else {
+				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] ERROR");
+			}
 			pulist.add(pu);
 		}
-		System.out.println("...done");
+		System.out.println("< Done");
 		return pulist;
 	}
 
 	private static ProcessingUnit processTrial(String nctid) {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		ConceptExtractor ce = new ConceptExtractor(Environment.METAMAP_HOST);
-		System.out.print(dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ");
+		System.out.println("> "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ");
 		ProcessingUnit pu = new ProcessingUnit(nctid);
 		ce.process(pu, STORE);
-		System.out.println(pu.getTime()*(-1));
-		System.out.println("...done");
+		if(pu.getTime() != -1){
+			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] " + pu.getTime()*(-1));
+		} else {
+			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ERROR");
+		}
+		System.out.println("< Done");
 		return pu;
 	}
 	

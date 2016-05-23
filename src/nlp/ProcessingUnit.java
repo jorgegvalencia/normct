@@ -12,8 +12,10 @@ public class ProcessingUnit {
 
 	public ProcessingUnit(String nctid) {
 		this.clinicalTrial = new ClinicalTrial(nctid);
-		this.criteria = new CriteriaSet(nctid, clinicalTrial.getCriteriaTextBlock());
-		this.time = 0.0;
+		if(this.clinicalTrial.getNctid() != null){
+			this.criteria = new CriteriaSet(nctid, clinicalTrial.getCriteriaTextBlock());
+			this.time = 0.0;
+		}
 	}
 
 	public ClinicalTrial getClinicalTrial() {

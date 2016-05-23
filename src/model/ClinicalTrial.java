@@ -33,7 +33,10 @@ public class ClinicalTrial {
 
 		if (!checkLocalFile(nctid)) { // if the file is not already downloaded
 			// download the trial
-			CTManager.downloadTrial(nctid);
+			if(!CTManager.downloadTrial(nctid)){ // if it does not exist, set null
+				this.nctid = null;
+				return;
+			}
 		}
 		try {
 			File file = new File(filePath);
@@ -100,6 +103,7 @@ public class ClinicalTrial {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
 	}
 	
 	public ClinicalTrial(String nctid, String title, String topic){
