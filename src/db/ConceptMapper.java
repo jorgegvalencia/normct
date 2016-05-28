@@ -19,7 +19,9 @@ public class ConceptMapper implements RowMapper<Concept> {
 					rs.getString("name"),
 					rs.getString("semantic_type"),
 					rs.getString("normalform"),
-					rs.getString("focus_concept"));
+					rs.getString("focus_concept"),
+					rs.getString("focus_concept_fsn"),
+					rs.getString("focus_concept_hierarchy"));
 		}
 		return c;
 	}

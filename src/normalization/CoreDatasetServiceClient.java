@@ -36,10 +36,16 @@ public class CoreDatasetServiceClient {
 		return SingletonHelper.INSTANCE;
 	}
 	
-	public String getNFFocusConcept(String scui){
-		NormalizedExpression expression = port.getShortNormalForm(scui);
+	public String getNFFocusConcept(String sctid){
+		NormalizedExpression expression = port.getShortNormalForm(sctid);
 		String focusConceptCode = expression.getFocusConcept().getValue();
 		return focusConceptCode;
+	}
+	
+	public String getNFFocusConceptFSN(String sctid){
+		NormalizedExpression expression = port.getShortNormalForm(sctid);
+		String focusConceptFsn = expression.getFocusConceptTitle().getValue();
+		return focusConceptFsn;
 	}
 	
 	public HashMap<String, String> getNFRefinements(String scui){

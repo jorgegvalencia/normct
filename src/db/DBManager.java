@@ -230,15 +230,20 @@ public class DBManager {
 
 		@Override
 		public void saveConcept(Concept concept) {
-			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy,normalform,focus_concept) VALUES (?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
-					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn), hierarchy=VALUES(hierarchy), normalform=VALUES(normalform), focus_concept=VALUES(focus_concept)";
+			String sql = "INSERT INTO concept (sctid,cui,fsn,hierarchy,normalform,focus_concept, focus_concept_fsn, focus_concept_hierarchy) VALUES (?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE"
+					+ " sctid=VALUES(sctid), cui=VALUES(cui), fsn=VALUES(fsn),"
+					+ " hierarchy=VALUES(hierarchy), normalform=VALUES(normalform),"
+					+ " focus_concept=VALUES(focus_concept), focus_concept_fsn=VALUES(focus_concept_fsn), "
+					+ " focus_concept_hierarchy=VALUES(focus_concept_hierarchy)";
 			jdbcTemplateObject.update(sql, 
 					concept.getSctid(), 
 					concept.getCui(), 
 					concept.getFsn(),
 					concept.getHierarchy(),
 					concept.getNormalForm(),
-					concept.getFocusConcept());
+					concept.getFocusConcept(),
+					concept.getFocusConceptFsn(),
+					concept.getFocusConceptHierarchy());
 			if(concept.getNFRefinements() != null){
 				for (Entry<String, String> entry : concept.getNFRefinements().entrySet()) {
 					saveRefinement(entry, concept.getSctid());

@@ -16,6 +16,8 @@ public class Concept {
 	private String hierarchy;
 	private String normalForm;
 	private String focusConcept;
+	private String focusConceptFsn;
+	private String focusConceptHierarchy;
 
 	private DBManager db;
 
@@ -31,13 +33,15 @@ public class Concept {
 		}
 	}
 
-	public Concept(String cui, String sctid, String fsn, String hierarchy, String normalform, String focusConcept) {
+	public Concept(String cui, String sctid, String fsn, String hierarchy, String normalform, String focusConcept, String focusConceptFsn, String focusConceptHierarchy) {
 		this.cui = cui;
 		this.sctid = sctid;
 		this.fsn = fsn;
 		this.hierarchy = hierarchy;
 		this.normalForm = normalform;
 		this.focusConcept = focusConcept;
+		this.focusConceptFsn = focusConceptFsn;
+		this.focusConceptHierarchy = focusConceptHierarchy;
 	}
 
 	public String getCui() {
@@ -62,6 +66,14 @@ public class Concept {
 	
 	public String getFocusConcept() {
 		return focusConcept;
+	}
+	
+	public String getFocusConceptFsn() {
+		return focusConceptFsn;
+	}
+	
+	public String getFocusConceptHierarchy() {
+		return focusConceptHierarchy;
 	}
 
 	private void getSCTid() throws InstantiationException {
@@ -107,6 +119,17 @@ public class Concept {
 		CoreDatasetServiceClient normclient = CoreDatasetServiceClient.getInstance();
 		normalForm = normclient.getNormalFormAsString(sctid, true);
 		focusConcept = normclient.getNFFocusConcept(sctid);
+		focusConceptFsn = normclient.getNFFocusConceptFSN(sctid);
+		if(focusConceptFsn == null){
+			focusConceptFsn = fsn;
+			focusConceptHierarchy = hierarchy;
+		} else {
+			Matcher m = pattern.matcher(focusConceptFsn);
+			if (m.find())
+				focusConceptHierarchy = m.group(0).replaceAll("\\p{Punct}", "");
+			else
+				focusConceptHierarchy = "N/A";
+		}
 	}
 	
 	public HashMap<String, String> getNFRefinements() {
