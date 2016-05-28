@@ -35,7 +35,7 @@ public class ProcessingUnit {
 	}
 
 	public boolean isProcessed() {
-		return time > 0.0;
+		return time != 0.0;
 	}
 	
 	public void printResults(){

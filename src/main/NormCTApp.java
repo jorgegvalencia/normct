@@ -121,10 +121,10 @@ public class NormCTApp {
 			System.out.println("> "+dateFormat.format(new Date())+" ["+(i+1)+"]" + "[" + trials.get(i) + "] ");
 			ProcessingUnit pu = new ProcessingUnit(trials.get(i));
 			ce.process(pu, STORE);
-			if(pu.getTime() != -1){
+			if(pu.isProcessed()){
 				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] " + pu.getTime()*(-1));
 			} else {
-				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] ERROR");
+				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] NOT AVAILABLE");
 			}
 			pulist.add(pu);
 		}
@@ -138,10 +138,10 @@ public class NormCTApp {
 		System.out.println("> "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ");
 		ProcessingUnit pu = new ProcessingUnit(nctid);
 		ce.process(pu, STORE);
-		if(pu.getTime() != -1){
+		if(pu.isProcessed()){
 			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] " + pu.getTime()*(-1));
 		} else {
-			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ERROR");
+			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] NOT AVAILABLE");
 		}
 		System.out.println("< Done");
 		return pu;

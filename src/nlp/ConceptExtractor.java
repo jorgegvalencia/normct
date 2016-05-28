@@ -39,7 +39,7 @@ public class ConceptExtractor {
 
 	public ProcessingUnit process(ProcessingUnit pu, boolean save) {
 		if(pu.getClinicalTrial().getNctid() == null){
-			pu.setTime(-1);
+			pu.setTime(0.0);
 			return pu;
 		}
 		boolean processed = pu.isProcessed();
