@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    
+    <bean 
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>file:config.properties</value>
+		</property>
+	</bean>
+    
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<bean id="metathesaurus"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.kandel}" />
+		<property name="username" value="${jdbc.kandeluser}" />
+		<property name="password" value="${jdbc.kandelpass}" />
+	</bean>
+	
+	<bean id="snomedct"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="${jdbc.snomedct}" />
+		<property name="username" value="${jdbc.snomedctuser}" />
+		<property name="password" value="${jdbc.snomedctpass}" />
+	</bean>
+	
+	<bean id="normJDBCTemplate" class="db.DBManager$NormJDBCTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="metathesaurusJDBCTemplate" class="db.DBManager$MetathesaurusJDBCTemplate">
+		<property name="dataSource" ref="metathesaurus" />
+	</bean>
+	
+	<bean id="snomedJDBCTemplate" class="db.DBManager$SnomedJDBCTemplate">
+		<property name="dataSource" ref="snomedct" />
+	</bean>
+	
+	<bean id="cfrReportJDBCTemplate" class="db.reports.CFReportJDBCTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="tcrReportJDBCTemplate" class="db.reports.TConceptsJDBCTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+</beans>
