@@ -44,6 +44,8 @@ public class DBManager {
 			e.printStackTrace();
 		} finally {
 			if (context == null) {
+				System.setErr(stderr);
+				System.err.println("Beans.xml configuration error. Review config.properties database parameters.");
 				System.exit(-1);
 			}
 		}

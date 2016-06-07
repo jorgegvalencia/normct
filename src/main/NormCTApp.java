@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.apache.commons.cli.HelpFormatter;
@@ -122,7 +123,7 @@ public class NormCTApp {
 			ProcessingUnit pu = new ProcessingUnit(trials.get(i));
 			ce.process(pu, STORE);
 			if(pu.isProcessed()){
-				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] " + pu.getTime()*(-1));
+				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] ENDED");
 			} else {
 				System.out.println("< "+dateFormat.format(new Date())+ " ["+(i+1)+"]" + "[" + trials.get(i) + "] NOT AVAILABLE");
 			}
@@ -139,7 +140,7 @@ public class NormCTApp {
 		ProcessingUnit pu = new ProcessingUnit(nctid);
 		ce.process(pu, STORE);
 		if(pu.isProcessed()){
-			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] " + pu.getTime()*(-1));
+			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] ENDED");
 		} else {
 			System.out.println("< "+dateFormat.format(new Date())+ " [*]" + "[" + nctid + "] NOT AVAILABLE");
 		}
@@ -156,7 +157,7 @@ public class NormCTApp {
     		String filename = "config.properties";
     		input = NormCTApp.class.getClassLoader().getResourceAsStream(filename);
     		if(input==null){
-    	            System.out.println("Sorry, unable to find " + filename);
+    	            System.out.println("Unable to find " + filename);
     		    return;
     		}
     		//load a properties file from class path, inside static method
